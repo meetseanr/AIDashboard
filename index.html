@@ -43,39 +43,164 @@
     display: flex; min-height: 100vh;
   }
 
-  /* ======== PASSWORD GATE ======== */
-  #gate {
-    position: fixed; inset: 0; z-index: 9999; background: var(--bg);
+  /* ── Password Gate (ProtoDL §11 — two-panel) ─── */
+  .gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
     display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 20px;
   }
-  #gate.hidden { display: none; }
-  .gate-box {
-    background: var(--card); border-radius: var(--radius);
-    padding: 40px 48px; box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border-light);
-    text-align: center; max-width: 380px; width: 90%;
+  .gate-panel {
+    background: var(--card);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    width: 660px;
+    overflow: hidden;
+    display: flex;
   }
-  .gate-logo { font-weight: 700; font-size: 22px; color: var(--ink); letter-spacing: -0.5px; margin-bottom: 4px; }
-  .gate-logo span { font-weight: 300; color: var(--ink-light); margin-left: 6px; font-size: 14px; }
-  .gate-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 24px; }
+  .gate-left {
+    width: 280px; flex-shrink: 0;
+    background: var(--ink);
+    padding: 40px 32px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .gate-left::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .gate-left::after {
+    content: '';
+    position: absolute; bottom: -40px; left: -40px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .gate-logo {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.12); margin-bottom: 24px; flex-shrink: 0;
+  }
+  .gate-logo svg { width: 20px; height: 20px; fill: white; }
+  .gate-brand {
+    font-size: 10px; font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .gate-proto-name {
+    font-size: 18px; font-weight: 700; color: white;
+    letter-spacing: -0.3px; line-height: 1.35;
+    margin-bottom: 24px; flex: 1;
+  }
+  .gate-meta { display: flex; flex-direction: column; gap: 10px; }
+  .gate-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .gate-meta-label {
+    font-size: 9px; font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .gate-meta-value { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.75); }
+  .gate-right {
+    flex: 1;
+    padding: 40px 36px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .gate-heading {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.3px; margin-bottom: 6px;
+  }
+  .gate-sub { font-size: 13px; color: var(--ink-light); line-height: 1.5; margin-bottom: 6px; }
+  .gate-disclaimer {
+    background: var(--neutral-bg);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--ink-faint);
+    padding: 10px 12px;
+    margin: 16px 0 24px;
+  }
+  .gate-disclaimer p { font-size: 11px; color: var(--ink-light); line-height: 1.6; }
+  .gate-disclaimer strong { font-weight: 600; color: var(--ink-med); }
+  .gate-input-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-light);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
   .gate-input {
-    width: 100%; padding: 12px 16px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); font-size: 14px; font-family: 'Inter', sans-serif;
-    color: var(--ink); background: var(--bg); outline: none; text-align: center;
-    transition: border-color 0.2s;
+    width: 100%; padding: 11px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); font-size: 14px;
+    font-family: 'Inter', sans-serif; color: var(--ink);
+    background: var(--neutral-bg); outline: none;
+    letter-spacing: 3px; margin-bottom: 10px;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .gate-input:focus { border-color: var(--ink-faint); }
-  .gate-input.error { border-color: var(--negative); animation: shake 0.3s ease; }
+  .gate-input:focus { border-color: var(--ink); background: white; }
+  .gate-input.gate-shake { animation: gate-shake 0.35s ease; border-color: var(--negative); }
   .gate-btn {
-    width: 100%; padding: 12px; margin-top: 12px;
-    background: var(--ink); color: white; border: none; border-radius: var(--radius-sm);
+    width: 100%; padding: 12px; border-radius: var(--radius-sm);
+    background: var(--ink); color: white; border: none;
     font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
     cursor: pointer; transition: opacity 0.15s;
   }
   .gate-btn:hover { opacity: 0.85; }
-  .gate-error-msg { font-size: 12px; color: var(--negative-text); margin-top: 8px; display: none; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .gate-error { font-size: 12px; color: var(--negative-text); margin-top: 10px; min-height: 18px; }
+  .gate-footer { font-size: 10px; color: var(--ink-faint); margin-top: 20px; }
+  @keyframes gate-shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-6px); }
+    40%       { transform: translateX(6px); }
+    60%       { transform: translateX(-4px); }
+    80%       { transform: translateX(4px); }
+  }
+
+  /* ── Prototype Context Panel (ProtoDL §12) ───── */
+  .bg-panel {
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid #e0e8ff;
+  }
+  .bg-panel-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: #f0f4ff;
+    cursor: pointer; user-select: none;
+    transition: background 0.15s;
+  }
+  .bg-panel-header:hover { background: #e8effe; }
+  .bg-tag {
+    font-size: 9px; font-weight: 700;
+    color: #5470cc;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    background: #dce8ff; border-radius: 4px;
+    padding: 2px 6px; flex-shrink: 0;
+  }
+  .bg-title {
+    font-size: 12px; font-weight: 600;
+    color: #3355aa; flex: 1;
+  }
+  .bg-chev {
+    font-size: 12px; color: #5470cc;
+    transition: transform 0.2s;
+  }
+  .bg-chev.open { transform: rotate(180deg); }
+  .bg-body {
+    display: none;
+    padding: 16px;
+    background: #f8f9ff;
+    border-top: 1px solid #e0e8ff;
+  }
+  .bg-body.open { display: block; }
+  .bg-row { margin-bottom: 12px; }
+  .bg-row:last-child { margin-bottom: 0; }
+  .bg-lbl {
+    font-size: 10px; font-weight: 700;
+    color: #5470cc;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .bg-txt {
+    font-size: 12px; color: #3a4a7a;
+    line-height: 1.6;
+  }
 
   /* ======== SIDEBAR ======== */
   .sidebar {
@@ -537,14 +662,41 @@
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
-<div id="gate">
-  <div class="gate-box">
-    <div class="gate-logo">Build AU<span>Prototype</span></div>
-    <div class="gate-sub">Enter the access password to continue</div>
-    <input id="gateInput" class="gate-input" type="password" placeholder="Password" autocomplete="off" />
-    <button id="gateBtn" class="gate-btn">Enter</button>
-    <div id="gateError" class="gate-error-msg">Incorrect password. Please try again.</div>
+<!-- PASSWORD GATE (ProtoDL §11 — two-panel) -->
+<div class="gate" id="gate">
+  <div class="gate-panel">
+    <!-- Left: branding + metadata -->
+    <div class="gate-left">
+      <div class="gate-logo">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h16v2H4z"/></svg>
+      </div>
+      <div class="gate-brand">Build AU</div>
+      <div class="gate-proto-name">AI Dashboard Prototype</div>
+      <div class="gate-meta">
+        <div class="gate-meta-item">
+          <div class="gate-meta-label">Version</div>
+          <div class="gate-meta-value">v1.0</div>
+        </div>
+        <div class="gate-meta-item">
+          <div class="gate-meta-label">Last updated</div>
+          <div class="gate-meta-value">12 March 2026</div>
+        </div>
+      </div>
+    </div>
+    <!-- Right: access -->
+    <div class="gate-right">
+      <div class="gate-heading">Restricted access</div>
+      <div class="gate-sub">Enter the password below to view this demonstrator.</div>
+      <div class="gate-disclaimer">
+        <p>This is a <strong>demonstrator</strong> for use to explore concepts. It is not a product and is not designed using ODL. For questions, contact <strong>Sean Richards</strong>.</p>
+      </div>
+      <div class="gate-input-label">Password</div>
+      <input class="gate-input" id="gate-input" type="password" placeholder="••••••••••••"
+        autocomplete="current-password" onkeydown="if(event.key==='Enter') checkPassword()">
+      <button class="gate-btn" onclick="checkPassword()">Continue</button>
+      <div class="gate-error" id="gate-error"></div>
+      <div class="gate-footer">Objective Corporation · Concept demonstrator only</div>
+    </div>
   </div>
 </div>
 
@@ -603,14 +755,31 @@
 
 <script>
 // ============================================================
-// PASSWORD GATE
+// PASSWORD GATE (ProtoDL §11)
 // ============================================================
-const PASS='objective2026';
-const gate=document.getElementById('gate'),gateInput=document.getElementById('gateInput'),gateBtn=document.getElementById('gateBtn'),gateError=document.getElementById('gateError'),appShell=document.getElementById('appShell');
-function tryLogin(){if(gateInput.value===PASS){gate.classList.add('hidden');appShell.classList.add('visible');document.body.style.display='flex';}else{gateInput.classList.add('error');gateError.style.display='block';setTimeout(()=>gateInput.classList.remove('error'),400);}}
-gateBtn.addEventListener('click',tryLogin);
-gateInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
-gateInput.addEventListener('input',()=>{gateError.style.display='none';});
+(function() {
+  if (sessionStorage.getItem('proto_auth') === '1') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('appShell').classList.add('visible');
+    document.body.style.display = 'flex';
+  }
+})();
+
+function checkPassword() {
+  const input = document.getElementById('gate-input');
+  const err   = document.getElementById('gate-error');
+  if (input.value === 'objective2026') {
+    sessionStorage.setItem('proto_auth', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('appShell').classList.add('visible');
+    document.body.style.display = 'flex';
+  } else {
+    input.classList.remove('gate-shake');
+    void input.offsetWidth;
+    input.classList.add('gate-shake');
+    err.textContent = 'Incorrect password. Try again.';
+  }
+}
 
 // Close avatar dropdown on outside click
 document.addEventListener('click',e=>{if(!document.getElementById('avatarWrap').contains(e.target))document.getElementById('avatarDD').classList.remove('open');});
@@ -981,6 +1150,44 @@ function renderExplore(chips){
 // ============================================================
 // FULL PAGE RENDER
 // ============================================================
+// ============================================================
+// PROTOTYPE CONTEXT PANEL (ProtoDL §12)
+// ============================================================
+function toggleBP(id) {
+  const b = document.getElementById('bp-' + id);
+  const c = document.getElementById('chev-' + id);
+  const o = b.classList.toggle('open');
+  c.classList.toggle('open', o);
+}
+
+function bgPanel(id, what, why, who, dn) {
+  return `<div class="bg-panel">
+    <div class="bg-panel-header" onclick="toggleBP('${id}')">
+      <span class="bg-tag">Prototype context</span>
+      <span class="bg-title">Background &amp; Design Rationale</span>
+      <span class="bg-chev" id="chev-${id}">▾</span>
+    </div>
+    <div class="bg-body" id="bp-${id}">
+      <div class="bg-row">
+        <div class="bg-lbl">What this screen does</div>
+        <div class="bg-txt">${what}</div>
+      </div>
+      <div class="bg-row">
+        <div class="bg-lbl">Why designed this way</div>
+        <div class="bg-txt">${why}</div>
+      </div>
+      <div class="bg-row">
+        <div class="bg-lbl">Audience</div>
+        <div class="bg-txt">${who}</div>
+      </div>
+      ${dn ? `<div class="bg-row">
+        <div class="bg-lbl">Design decisions</div>
+        <div class="bg-txt">${dn}</div>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
 function renderPage(){
   const d=getPersonaData();
   // Update avatar
@@ -1006,6 +1213,12 @@ function renderPage(){
   narrSel={'c4-audience':'team','c4-period':'week','c4-focus':'balanced'};
 
   document.getElementById('pageContent').innerHTML=`
+    ${bgPanel('dashboard',
+      'Unified AI dashboard for planning teams. Bronwyn (Team Leader) sees team-wide KPIs, caseload distribution, and AI-generated narrative reports across 30 officers. Ralph (Senior Planner) sees his individual caseload, approaching deadlines, and referral blockers. Persona switching via avatar dropdown lets stakeholders experience both views.',
+      'Team leaders currently have no single view of team performance — they rely on manually-run ERP reports or spreadsheets. Research with foundation partner councils confirmed that the 80-day baseline threshold, overdue referrals, and STC durations are the metrics they check most frequently. Individual planners want to see their own approaching deadlines before they become overdue.',
+      'Planning Team Leaders (Bronwyn persona) and Senior Statutory Planners (Ralph persona). Team leaders need macro patterns across 30 officers; planners need micro-level detail on their own caseload.',
+      'Four concepts are presented as labelled concept boxes (red border) so reviewers can give feedback on each independently. KPI grid uses 6 columns for Bronwyn (team-wide) and 6 for Ralph (individual). NLQ engine uses pattern matching — not real AI — to demonstrate the interaction model. Narrative report (Concept 4) is Bronwyn-only, as individual planners would not typically author team reports.'
+    )}
     <div class="greeting">
       <div class="greeting-hello">Good morning, ${d.name}</div>
       <div class="greeting-sub">${d.greeting}</div>
@@ -1220,5 +1433,6 @@ window.showExportToast=function(type){showToast(type==='image'?'Exporting as PNG
 // INIT
 renderPage();
 </script>
+<script src="https://build-au-feedback-widget.vercel.app/feedback-widget.js"></script>
 </body>
 </html>
